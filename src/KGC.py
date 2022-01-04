@@ -18,8 +18,8 @@ class KGC:
         return {'priv': priv_keys, 'pub': pub_keys}
 
     def __gen_master_keys(self):
-        s1 = util.gen_random_vector(N)
-        s2 = util.gen_random_vector(N)
+        s1 = util.gen_random_vector(N, -1, 1)
+        s2 = util.gen_random_vector(N, -1, 1)
         a = util.gen_random_vector(N)
         self.msk = np.array([s1, s2])
         self.mpk = a
@@ -35,7 +35,7 @@ class KGC:
     def __gen_signer_pub_keys(self, priv_keys, k):
         pub_keys = [None] * (M + 1)
         for i in range(M + 1):
-            res = util.poly_op(self.mpk, priv_keys[i, 0], priv_keys[i, 1])
-            res = np.pad(res, (N - len(res), 0))
-            pub_keys[i] = (res, self.mpk, k[i][0])
+            t = util.poly_op(self.mpk, priv_keys[i, 0], priv_keys[i, 1])
+            t = np.pad(t, (N - len(t), 0))
+            pub_keys[i] = (t, self.mpk, k[i][0])
         return pub_keys
