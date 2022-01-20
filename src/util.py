@@ -2,6 +2,7 @@ import numpy as np
 import hashlib
 from config import *
 import bitarray
+import random
 
 
 def gen_random_vector(n, lb=-(p-1)/2, ub=(p-1)/2):
@@ -10,7 +11,26 @@ def gen_random_vector(n, lb=-(p-1)/2, ub=(p-1)/2):
     - Length: n
     - Range: [lb, ub]
     '''
-    return np.random.randint(lb, ub+1, n)
+    # return np.random.randint(lb, ub+1, n)
+    return np.array([random.randrange(lb, ub + 1) for _ in range(n)])
+
+
+def hash_R1(msg, n=N):
+    '''
+    msg: message in bytes
+    '''
+    hash_output = np.zeros(n)
+    hash_base = int(hashlib.sha512(msg).hexdigest(), base=16)
+    hash_base = np.array(list(np.base_repr(hash_base, 3))).astype(int)
+    hash_base[hash_base == 2] = -1
+
+    i = 0
+    while i < n:
+        m = min(len(hash_base), n - i)
+        hash_output[i:i+m] = hash_base[:m]
+        i += m
+
+    return hash_output
 
 
 def hash_D32(msk, msg, k, n=N):
@@ -97,7 +117,7 @@ def sign(msg, a, k, s1, s2):
         c = hash_D32(msk, msg, k)
         z1 = poly_op(c, s1, y1)
         z2 = poly_op(c, s2, y2)
-        lim = k - 32
+        lim = 2 * k - 32
         if np.all(-lim <= z1) and np.all(z1 <= lim) and np.all(-lim <= z2) and np.all(z2 <= lim):
             break
 

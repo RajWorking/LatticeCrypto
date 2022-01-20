@@ -21,13 +21,9 @@ class Aggregator:
         sig: (z1, z2, c) signature
         pub: (t, a, k) public key
         '''
-        z1 = sig[0]
-        z2 = sig[1]
-        c = sig[2]
-        t = pub[0]
-        a = pub[1]
-        k = pub[2]
-        lim = k - 32
+        z1, z2, c = sig
+        t, a, k = pub
+        lim = 2 * k - 32
 
         if not (np.all(-lim <= z1) and np.all(z1 <= lim) and np.all(-lim <= z2) and np.all(z2 <= lim)):
             print('not in range')

@@ -18,8 +18,8 @@ class KGC:
         return {'priv': priv_keys, 'pub': pub_keys}
 
     def __gen_master_keys(self):
-        s1 = util.gen_random_vector(N, -1, 1)
-        s2 = util.gen_random_vector(N, -1, 1)
+        s1 = util.gen_random_vector(N)
+        s2 = util.gen_random_vector(N)
         a = util.gen_random_vector(N)
         self.msk = np.array([s1, s2])
         self.mpk = a
@@ -29,7 +29,9 @@ class KGC:
         k = np.random.choice(np.arange(K_MIN, K_MAX),
                              size=M + 1, replace=False).reshape(-1, 1)
         lower_orders = util.lower_order_bits(self.msk.reshape(1, -1), k)
-        lower_orders = lower_orders.reshape(k.shape[0], 2, -1)
+        lower_orders = lower_orders.reshape(-1, N)
+        lower_orders = np.array([util.hash_R1(v) for v in lower_orders])
+        lower_orders = lower_orders.reshape(-1, 2, N)
         return lower_orders, k
 
     def __gen_signer_pub_keys(self, priv_keys, k):
