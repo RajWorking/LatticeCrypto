@@ -29,15 +29,19 @@ class Aggregator:
             print('not in range')
             return False
 
-        msk = util.poly_mod(np.polysub(
-            util.poly_op(a, z1, z2), np.polymul(c, t))
+        msk = util.poly_mod(
+            np.polysub(
+                util.poly_op(a, z1, z2),
+                np.convolve(c, t)
+            ) * pow(2, -1, p)
         )
 
-        if not np.all(util.hash_D32(msk, msg, k) == c):
-            print(np.sum(util.hash_D32(msk, msg, k) != c), 'not matched')
+        c_new = util.hash_D32(msk, msg, k)
+        if not np.all(c_new == c):
+            # print(np.sum(c_new != c), 'not matched')
             return False
 
         return True
 
     def AggSign(self, msg):
-        return util.sign(msg, self.pk[1], self.pk[2], self.sk[0], self.sk[1])
+        return util.sign(msg, self.sk, self.pk)

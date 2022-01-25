@@ -16,4 +16,4 @@ class IOT_device:
         self.pk = pk
 
     def LSign(self, msg):
-        return util.sign(msg, self.pk[1], self.pk[2], self.sk[0], self.sk[1])
+        return util.sign(msg, self.sk, self.pk)
