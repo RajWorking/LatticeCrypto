@@ -2,7 +2,7 @@
 N = 1 << 9  # 9
 
 # number of IOT devices
-M = 1  # 15
+M = 5  # 15
 
 # large prime number s.t. p=1 (mod 2n)
 # p = 8383489
