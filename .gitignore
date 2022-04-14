@@ -1,5 +1,4 @@
 __pycache__/
 .idea/
 venv/
-src/test.txt
-src/test.py
+test.py
