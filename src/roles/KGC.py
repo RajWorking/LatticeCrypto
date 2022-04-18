@@ -4,8 +4,8 @@ algorithm run by the KGC
 """
 
 import numpy as np
-from config import *
-from utils import hl_orders, hashers, poly, util
+from ..config import *
+from ..utils import hl_orders, hashers, poly, util
 
 
 class KGC:

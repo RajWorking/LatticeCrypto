@@ -1,7 +1,7 @@
 # helpers
 import random
 import numpy as np
-from config import *
+from ..config import *
 
 
 def gen_random_vector(n, lb=-(p - 1) // 2, ub=(p - 1) // 2):

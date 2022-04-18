@@ -3,7 +3,7 @@ This code executes the signing
 algorithm by IOT device
 """
 
-from utils import sign
+from ..utils import sign
 
 
 class IOT_device:

@@ -2,9 +2,9 @@
 This code executes the algorithm by Aggregator
 """
 
-from config import *
+from ..config import *
 import numpy as np
-from utils import hashers, poly, sign
+from ..utils import hashers, poly, sign
 
 
 class Aggregator:

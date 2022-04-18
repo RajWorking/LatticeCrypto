@@ -3,8 +3,8 @@ import time
 import os
 import sys
 
-from config import *
-from src import Agg, IOT, KGC
+from src.config import *
+from src.roles import Agg, IOT, KGC
 
 np.set_printoptions(threshold=sys.maxsize)
 

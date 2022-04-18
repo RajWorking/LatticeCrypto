@@ -1,7 +1,7 @@
 # hashing functions
 import hashlib
 import bitarray
-from config import *
+from ..config import *
 from .hl_orders import *
 
 
@@ -42,5 +42,5 @@ def hash_D32(msk, msg, k, n=f):
     for i in range(32):
         window = digest_bits[i * 5: (i + 1) * 5]
         hash_output[16 * i + int(window[1:5], 2)] = 1 if window[0] == '1' else -1
-    hash_output = np.pad(hash_output, n - 512)
+    hash_output = np.pad(hash_output, (n - 512, 0))
     return hash_output

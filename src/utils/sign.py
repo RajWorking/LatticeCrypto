@@ -13,8 +13,8 @@ def sign(msg, sk, pk):
 
     lim = 2 * k - 32
     while 1:
-        y1 = gen_random_vector(N, -k, k)
-        y2 = gen_random_vector(N, -k, k)
+        y1 = gen_random_vector(f, -k, k)
+        y2 = gen_random_vector(f, -k, k)
         msk = poly_op(a, y1, y2)
         c = hash_D32(msk, msg, k)
         z1 = poly_op(c, s1, 2 * y1)
@@ -22,4 +22,4 @@ def sign(msg, sk, pk):
         if np.all(-lim <= z1) and np.all(z1 <= lim) and np.all(-lim <= z2) and np.all(z2 <= lim):
             break
 
-    return z1, z2, c
+    return z1.astype(int), z2.astype(int), c.astype(int)
