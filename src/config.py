@@ -3,7 +3,7 @@ v = 9
 f = 1 << v
 
 # number of IOT devices
-N = 4
+N = 2
 
 # large prime number s.t. p=1 (mod 2f)
 p = 1461501637330902918203684832716283019655932564481 # 8383489

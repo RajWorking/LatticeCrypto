@@ -44,5 +44,10 @@ class Aggregator:
 
         return True
 
-    def AggSign(self, msg):
+    def AggSign(self, chunk):
+        msg = hashers.hash_D32([], chunk, 0).tobytes()
         return sign.sign(msg, self.sk, self.pk)
+    
+    def VerASign(self, chunk, sig):
+        msg = hashers.hash_D32([], chunk, 0).tobytes()
+        return self.LVer(msg, sig, self.pk)

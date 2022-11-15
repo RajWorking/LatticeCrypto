@@ -1,10 +1,14 @@
-from src.roles import KGC
-from src.config import *
-import numpy as np
+import time
 import json
 
+from src.roles import KGC
+from src.config import *
+
 kgc = KGC.KGC()
+
+st = time.time()
 signers = kgc.KeyGen()
+print("Time: ", time.time() - st)
 
 for i in range(N+1):
     keys = {}

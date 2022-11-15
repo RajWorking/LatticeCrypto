@@ -1,4 +1,5 @@
 import socket
+import time
 from _thread import *
 import threading
 import json
@@ -9,6 +10,7 @@ from src.config import *
 
 print_lock = threading.Lock()
 msg_array = []
+chunk_agg = b''
 
 f = open('keys.json', 'r')
 obj = json.load(f)
@@ -17,6 +19,7 @@ f.close()
 sk = np.array([obj['priv']['s1'], obj['priv']['s2']])
 pk = (np.array(obj['pub']['t']), obj['pub']['a'], obj['pub']['k'])
 agg = Agg.Aggregator(sk, pk)
+print('Public parameter k: ', pk[2])
 
 
 def recvall(sock, count):
@@ -32,6 +35,7 @@ def recvall(sock, count):
 
 def threaded(conn, addr):
     global msg_array
+    global chunk_agg
 
     while True:
         data = recvall(conn, 4)
@@ -40,10 +44,10 @@ def threaded(conn, addr):
 
         print_lock.acquire()
 
-        len = int.from_bytes(data, 'big')
-        data = json.loads(recvall(conn, len).decode())
+        sz = int.from_bytes(data, 'big')
+        data = json.loads(recvall(conn, sz).decode())
 
-        print('from: ', addr)
+        print('\nFrom: ', addr)
 
         z1 = np.array(data['sig']['z1'])
         z2 = np.array(data['sig']['z2'])
@@ -54,10 +58,16 @@ def threaded(conn, addr):
               np.array(data['pk']['a']),
               data['pk']['k'])
 
-        print('message: ', msg)
-        print('verified: ', agg.LVer(msg.encode(), sig, pk))
+        st = time.time()
+        ok = agg.LVer(msg.encode(), sig, pk)
+        print("Verification Time: ", time.time() - st)
+        print('Message: ', msg)
+        # print('message size (bytes): ', len(msg))
+        print('Verified: ', ok)
 
         msg_array += [msg]
+        chunk = b''.join([z1.tobytes(), z2.tobytes(), c.tobytes(), msg.encode()])
+        chunk_agg = b''.join([chunk_agg, chunk])
 
         print_lock.release()
 
@@ -66,6 +76,7 @@ def threaded(conn, addr):
 
 def main():
     global msg_array
+    global chunk_agg
     s = socket.socket()
 
     s.bind(('', int(argv[1])))
@@ -81,8 +92,25 @@ def main():
 
     while True:
         if len(msg_array) >= N:
-            print(msg_array)
+
+            print("\nMessages: ")
+
+            for msg in msg_array:
+                print(msg)
+
+            print("Chunk size: ", len(chunk_agg))
+            
+            st = time.time()
+            sig = agg.AggSign(chunk_agg)
+            print("Aggregate Signing Time: ", time.time() - st)
+            
+            st = time.time()
+            ok = agg.VerASign(chunk_agg, sig)
+            print("Aggregate Verification Time: ", time.time() - st)
+            # print("Verified: ", ok)
+
             msg_array = []
+            chunk_agg = b''
 
 
 if __name__ == '__main__':

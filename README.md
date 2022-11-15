@@ -1,13 +1,3 @@
 # LatticeCrypto
 
-for later
-```
-# server
-key = int(''.join(str(i) for i in (np.array(
-        list(signers['priv'][i][0]) + list(signers['priv'][i][1])) + 1)), base=3)
-
-# client
-key = np.array(list(np.base_repr(key, base=3)), dtype='int')
-key = np.pad(key, (f-len(key), 0)) - 1
-
-```
+The setup consists of a Raspberry Pi 3 Model B as our IOT device, an ubuntu 20.04 laptop as both KGC and Aggregator, and HP Chromebook laptop as Cloud server. We use python 3.8.10 to code the proposed scheme. The conducted experiment was to check the message signing and verification process of our lattice based scheme. For this, we have coded the `KeyGen` phase of the KGC, the `LSign` signing algorithm and the `LVer` verification algorithm. The `AggSign` and `VerASign` are extensions of `LSign` and `LVer` respectively, upon the aggregation of the messages received by the aggregator. Real world scenario is simulated by creating multiple users on the Raspberry Pi IOT device, each sending messages to the Aggregator. The private and public keys for each of the users is sent via a secure channel while the messages and signatures are transferred over open network. The time taken for each of the steps is calculated independently.
