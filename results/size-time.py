@@ -27,12 +27,12 @@ ver_time = [0.0621,
 # ver_time = [0.0787, 0.1450, 0.3172, 0.6212, 1.200]
 
 # fig, axs = plt.subplots((10, 10))
-plt.figure(figsize=(9, 7))
+plt.figure(figsize=(10, 9))
 plt.rc('font', size=16)          # controls default text sizes
 plt.rc('axes', labelsize=28)    # fontsize of the x and y labels
 plt.rc('xtick', labelsize=20)    # fontsize of the tick labels
 plt.rc('ytick', labelsize=22)    # fontsize of the tick labels
-plt.rc('legend', fontsize=18)    # legend fontsize
+plt.rc('legend', fontsize=22)    # legend fontsize
 
 plt.ticklabel_format(style='plain')
 plt.ylim(0, 0.8)
@@ -57,12 +57,12 @@ plt.show()
 ###############################################3
 
 # fig, axs = plt.subplots((10, 10))
-plt.figure(figsize=(9, 7))
+plt.figure(figsize=(10, 9))
 plt.rc('font', size=16)          # controls default text sizes
 plt.rc('axes', labelsize=28)    # fontsize of the x and y labels
 plt.rc('xtick', labelsize=20)    # fontsize of the tick labels
 plt.rc('ytick', labelsize=20)    # fontsize of the tick labels
-plt.rc('legend', fontsize=18)    # legend fontsize
+plt.rc('legend', fontsize=22)    # legend fontsize
 
 plt.ticklabel_format(style='plain')
 plt.ylim(0, 0.20)

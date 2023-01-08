@@ -4,6 +4,7 @@ import sys
 import time
 import numpy as np
 import json
+from collections import Counter
 from src.roles import IOT
 from src.config import *
 
@@ -17,7 +18,7 @@ iot = IOT.IOT_device(sk, pk)
 print('Public parameter k: ', pk[2])
 
 s = socket.socket()
-s.connect(('10.42.0.1', int(sys.argv[1])))
+s.connect(('127.0.0.1', int(sys.argv[1])))
 
 print('Type "exit" to quit the program.\n')
 while True:
@@ -27,13 +28,13 @@ while True:
 
     #####
     # testing message sizes
-    # msg_len = (1 << int(msg)) // 2
-    msg_len = (1 << 12) // 2  # 4 KB
+    msg_len =  20000  # 256 KB
     #####
 
     #####
     # testing number of messages
-    num = 1 # int(msg) # 4
+    num = 1000 # int(msg) # 4
+    hist = []
     #####
 
     timesum = 0
@@ -41,14 +42,15 @@ while True:
 
         #####
         # random message
-        # msg = (os.urandom(msg_len)).hex()
+        msg = (os.urandom(msg_len)).hex()
         #####
 
         st = time.time()
         sig = iot.LSign(msg=msg.encode())
         end = time.time()
-        # print(end - st)
-        timesum += end - st
+        print(end - st)
+        time_sign = int((end - st) * 1000)
+        hist.append(time_sign)
 
         z1, z2, c = sig
 
@@ -64,6 +66,7 @@ while True:
         s.sendall(sz.to_bytes(4, byteorder='big'))
         s.sendall(json.dumps(data).encode())
 
-    print("Signing Time: ", timesum/num)
+    print("Signing Time Histogram: (s)")
+    print(Counter(hist))
 
 s.close()

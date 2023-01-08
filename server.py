@@ -4,6 +4,7 @@ from _thread import *
 import threading
 import json
 import numpy as np
+from collections import Counter
 from sys import argv
 from src.roles import Agg
 from src.config import *
@@ -37,17 +38,24 @@ def threaded(conn, addr):
     global msg_array
     global chunk_agg
 
+    hist = []
+    i = 0
     while True:
         data = recvall(conn, 4)
         if not data:
             break
+
+        print(i)
+        if i >= 999:
+            break
+        i += 1
 
         print_lock.acquire()
 
         sz = int.from_bytes(data, 'big')
         data = json.loads(recvall(conn, sz).decode())
 
-        print('\nFrom: ', addr)
+        # print('\nFrom: ', addr)
 
         z1 = np.array(data['sig']['z1'])
         z2 = np.array(data['sig']['z2'])
@@ -60,16 +68,24 @@ def threaded(conn, addr):
 
         st = time.time()
         ok = agg.LVer(msg.encode(), sig, pk)
-        print("Verification Time: ", time.time() - st)
-        print('Message: ', msg)
-        # print('message size (bytes): ', len(msg))
-        print('Verified: ', ok)
+        time_ver = time.time() - st
+
+        print("Verification Time: ", time_ver, "s")
+        # print('Message: ', msg)
+        print('message size (bytes): ', len(msg))
+        # print('Verified: ', ok)
+        
+        time_ver = int(time_ver * 1000)
+        hist.append(time_ver)
 
         msg_array += [msg]
-        chunk = b''.join([z1.tobytes(), z2.tobytes(), c.tobytes(), msg.encode()])
+        chunk = b''.join([z1.tobytes(), z2.tobytes(),
+                         c.tobytes(), msg.encode()])
         chunk_agg = b''.join([chunk_agg, chunk])
 
         print_lock.release()
+
+    print(Counter(hist))
 
     conn.close()
 
@@ -99,14 +115,14 @@ def main():
                 print(msg)
 
             print("Chunk size: ", len(chunk_agg))
-            
+
             st = time.time()
             sig = agg.AggSign(chunk_agg)
-            print("Aggregate Signing Time: ", time.time() - st)
-            
+            print("Aggregate Signing Time: ", time.time() - st, "s")
+
             st = time.time()
             ok = agg.VerASign(chunk_agg, sig)
-            print("Aggregate Verification Time: ", time.time() - st)
+            print("Aggregate Verification Time: ", time.time() - st, "s")
             # print("Verified: ", ok)
 
             msg_array = []
