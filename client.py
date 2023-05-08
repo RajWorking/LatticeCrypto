@@ -15,7 +15,7 @@ iot = IOT.IOT_device(sk, pk)
 print(pk[2])
 
 s = socket.socket()
-s.connect(('10.42.0.1', int(sys.argv[1])))
+s.connect((sys.argv[2], int(sys.argv[1])))
 
 print('Type "exit" to quit the program.')
 while True:
