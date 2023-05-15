@@ -1,8 +1,18 @@
 # LatticeCrypto
 
 ## About
+This project is an implementation of following paper-  
+`https://ieeexplore.ieee.org/abstract/document/10078405`
 
-## Setup Config
+It involves communication between laptop and Raspberry Pi for actuating the signature scheme as designed in above paper.
+We use ubuntu OS for all algorithms involving key generation, signing, verfication etc.
+
+## Setup Config.py (src)
+
+- (N) number of IOT devices
+- (f) degree of polynomial - power of 2
+- (p) large prime number
+- (K_min, K_max) range of positive integer < sqrt(p)
 
 
 ## How to Run
